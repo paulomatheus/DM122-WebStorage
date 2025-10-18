@@ -13,7 +13,7 @@
   <body>
     <main class="container">
       <hgroup>
-        <h2>HTML5 LocalStorage API</h2>
+        <h1>HTML5 LocalStorage API</h1>
         <p>How to use <code>window.localStorage</code> to persist data</p>
       </hgroup>
       <form>
@@ -29,16 +29,23 @@
         </fieldset>
       </form>
       <section>
-        <table>
+        <p id="no-subscriber">
+          No subscribers found. Add a new one using the form above!
+        </p>
+        <table hidden>
           <thead>
-            <th>Date</th>
-            <th>Email</th>
-            <th>&nbsp;</th>
+            <tr>
+              <th>Date</th>
+              <th>Email</th>
+              <th>&nbsp;</th>
+            </tr>
           </thead>
           <tbody>
-            <td>Oct 10, 2025</td>
-            <td>edysegura@inatel.br</td>
-            <td>🗑️</td>
+            <tr>
+              <td>Oct 10, 2025</td>
+              <td>edysegura@inatel.br</td>
+              <td>🗑️</td>
+            </tr>
           </tbody>
         </table>
       </section>
