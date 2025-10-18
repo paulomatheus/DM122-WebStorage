@@ -13,8 +13,9 @@ function loadSavedEmail() {
     console.log("[app.js] Loading saved email from LocalStorage...");
     const email = window.localStorage.getItem('email');
     if (email) {
-        console.log("[app.js] Found saved email:", email);
-        form.email.value = email;
+        console.log("[app.js] Found saved email:", email);      
+        const spanEmail = document.querySelector(".email");
+        spanEmail.textContent = email;
     } else {
         console.log("[app.js] No saved email found in LocalStorage.");
     }
