@@ -7,14 +7,17 @@ export default class SubscriberService {
 
   async saveEmail(email) {
     if (!email) {
-      console.error(`no email provided`);
+      console.error(`[SubscriberService.js] no email provided`);
       return;
     }
-    this.db.push({
+    const newRecord = {
       createdDate: new Date(),
       email,
-    });
+    };
+    // TODO: implemente duplicated item validation
+    this.db.push(newRecord);
     console.log(`👁️ [SubscriberService.js] ${email} added`);
     console.table(this.db);
+    return newRecord;
   }
 }

@@ -13,9 +13,24 @@ export default class HTMLService {
     });
   }
 
-  saveEmail(email) {
+  async saveEmail(email) {
     if (!email) return;
-        console.log(`👁️ [HtmlService.js] email ${email}`);
-    this.subscriberService.saveEmail(email);
+    console.log(`👁️ [HtmlService.js] saving email ${email}`);
+    const newSubscriber = await this.subscriberService.saveEmail(email);
+    this.addToTable(newSubscriber);
+  }
+
+  addToTable(subscriber) {
+    const table = document.querySelector("table");
+    if (!table || !subscriber) return;
+    const tbody = table.tBodies[0];
+    const row = tbody.insertRow();
+    const dateCell = row.insertCell();
+    const emailCell = row.insertCell();
+    const deleteCell = row.insertCell();
+    dateCell.textContent = subscriber.createdDate.toLocaleString("pt-BR");
+    emailCell.textContent = subscriber.email;
+    deleteCell.textContent = "🗑️";
+    table.hidden = false;
   }
 }
