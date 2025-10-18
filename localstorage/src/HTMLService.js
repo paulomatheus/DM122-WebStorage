@@ -15,6 +15,7 @@ export default class HTMLService {
 
   saveEmail(email) {
     if (!email) return;
-    console.log(`👁️ [HtmlService.js] email ${email}`);
+        console.log(`👁️ [HtmlService.js] email ${email}`);
+    this.subscriberService.saveEmail(email);
   }
 }
