@@ -16,14 +16,14 @@ export default class HTMLService {
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       console.log("[HtmlService.js] form trigged!");
-      this.saveEmail(form.email.value);
+      this.save(form.email.value);
     });
   }
 
-  async saveEmail(email) {
+  async save(email) {
     if (!email) return;
     console.log(`👁️ [HtmlService.js] saving email ${email}`);
-    const newSubscriber = await this.subscriberService.saveEmail(email);
+    const newSubscriber = await this.subscriberService.save(email);
     this.addSubsToTable([newSubscriber]);
   }
 

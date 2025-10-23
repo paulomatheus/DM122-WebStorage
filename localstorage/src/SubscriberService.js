@@ -8,7 +8,7 @@ export default class SubscriberService {
     console.log(`👁️ [SubscriberService.js] initialized`);
   }
 
-  async saveEmail(email) {
+  async save(email) {
     if (!email) {
       console.error(`[SubscriberService.js] no email provided`);
       return;
