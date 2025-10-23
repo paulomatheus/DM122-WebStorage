@@ -34,7 +34,7 @@ export default class HTMLService {
 
   mapToRow(subscriber) {
     if (!subscriber) return;
-    // TODO: implemente the delete action
+
     // TODO: implement a dialog to confirm the deletion
     // FIX: Date format
     const row = `
@@ -56,16 +56,34 @@ export default class HTMLService {
     if (!table) return;
     const tbody = table.tBodies[0];
     tbody.insertAdjacentHTML("beforeend", rows);
+    this.setDeleteBehavior();
+    this.toggleTable();
+  }
+
+  toggleTable() {
+    const table = document.querySelector("table");
+    const tbody = table.tBodies[0];
+    const hasRows = tbody.rows.length;
+    if (!hasRows) {
+      table.hidden = true;
+      return;
+    }
+    table.hidden = false;
+  }
+
+  // TODO: refactor needed
+  setDeleteBehavior() {
     const bins = document.querySelectorAll(".delete-sub");
     bins.forEach((bin) => {
-      //TODO: verify if it is last item from the list to hide table
+
       bin.onclick = async () => {
         const isDeleted = await this.subscriberService.delete(
           bin.dataset.email
         );
         if (isDeleted) bin.parentNode.remove();
+        this.toggleTable();
       };
     });
-    table.hidden = false;
+
   }
 }
