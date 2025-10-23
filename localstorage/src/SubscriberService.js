@@ -27,16 +27,16 @@ export default class SubscriberService {
     console.log(`[SubscriberService.js] ${email} added`);
     // console.table(this.#db);
     this.serialize();
-    return newRecord;
+    return { ...newRecord };
   }
 
   async getAll() {
-    return this.#db;
+    return window.structuredClone(this.#db);
   }
 
   async delete(email) {
     console.log(`[SubscriberService.js] delete ${email}`);
-    this.#db = this.#db.filter((sub) => sub.email != email);
+    this.#db = this.#db.filter((sub) => sub.email !== email);
     this.serialize();
     return true;
   }
