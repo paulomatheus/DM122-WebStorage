@@ -1,4 +1,3 @@
-
 export default class HTMLService {
   #table = null;
   #tbody = null;

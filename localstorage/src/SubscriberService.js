@@ -13,6 +13,11 @@ export default class SubscriberService {
       console.error(`[SubscriberService.js] no email provided`);
       return;
     }
+    const isDuplicated = this.#db.some((sub) => sub.email === email);
+    if (isDuplicated) {
+      console.error(`👁️ [SubscriberService.js] duplicated email: ${email}`);
+      return;
+    }
     const newRecord = {
       createdDate: new Date(),
       email,
@@ -35,7 +40,7 @@ export default class SubscriberService {
     this.serialize();
     return true;
   }
-  
+
   serialize() {
     const subsString = JSON.stringify(this.#db);
     window.localStorage.setItem(DB_KEY, subsString);
