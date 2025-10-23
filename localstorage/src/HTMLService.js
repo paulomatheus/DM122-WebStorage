@@ -1,7 +1,5 @@
-
 export default class HTMLService {
   constructor(subscriberService) {
-
     this.subscriberService = subscriberService;
     this.setFormListener();
     this.fetchSubscribers();
@@ -37,12 +35,17 @@ export default class HTMLService {
   mapToRow(subscriber) {
     if (!subscriber) return;
     // TODO: implemente the delete action
+    // TODO: implement a dialog to confirm the deletion
     // FIX: Date format
     const row = `
       <tr>
         <td>${subscriber.createdDate.toLocaleString("pt-BR")}</td>
         <td>${subscriber.email}</td>
-        <td>🗑️</td>
+        <td
+          class="delete-sub"
+          data-email="${subscriber.email}">
+            🗑️
+        </td>
       </tr>
     `;
     return row;
@@ -53,6 +56,12 @@ export default class HTMLService {
     if (!table) return;
     const tbody = table.tBodies[0];
     tbody.insertAdjacentHTML("beforeend", rows);
+    const bins = document.querySelectorAll(".delete-sub");
+    bins.forEach((bin) => {
+      bin.onclick = () => {
+        console.log(`👁️ [HTMLService.js] `, bin.dataset.email);
+      };
+    });
     table.hidden = false;
   }
 }
