@@ -1,8 +1,22 @@
 export default class HTMLService {
+  #table = null;
+  #tbody = null;
+
   constructor(subscriberService) {
     this.subscriberService = subscriberService;
     this.setFormListener();
+    this.initializeTableReferences();
     this.fetchSubscribers();
+  }
+
+  initializeTableReferences() {
+    const table = document.querySelector("table");
+    if (!table) {
+      console.log(`👁️ [HTMLService.js] the table element is required.`);
+      return;
+    }
+    this.#table = table;
+    this.#tbody = table.tBodies[0];
   }
 
   async fetchSubscribers() {
@@ -17,6 +31,7 @@ export default class HTMLService {
       event.preventDefault();
       console.log("[HtmlService.js] form trigged!");
       this.save(form.email.value);
+      // TODO: implement the form reset
     });
   }
 
@@ -34,7 +49,6 @@ export default class HTMLService {
 
   mapToRow(subscriber) {
     if (!subscriber) return;
-    // TODO: implement a dialog to confirm the deletion
 
     const row = `
       <tr>
@@ -51,17 +65,17 @@ export default class HTMLService {
   }
 
   addToTable(rows) {
-    const table = document.querySelector("table");
-    if (!table) return;
-    const tbody = table.tBodies[0];
-    tbody.insertAdjacentHTML("beforeend", rows);
+    if (!this.#tbody) return;
+    this.#tbody.insertAdjacentHTML("beforeend", rows);
+
+
     this.setDeleteBehavior();
     this.toggleTable();
   }
 
   toggleTable() {
-    const table = document.querySelector("table");
-    const tbody = table.tBodies[0];
+    const table = this.#table;
+    const tbody = this.#tbody;
     const hasRows = tbody.rows.length;
     if (!hasRows) {
       table.hidden = true;
@@ -75,6 +89,7 @@ export default class HTMLService {
     const bins = document.querySelectorAll(".delete-sub");
     bins.forEach((bin) => {
       bin.onclick = async () => {
+        // TODO: implement a dialog to confirm the deletion
         const isDeleted = await this.subscriberService.delete(
           bin.dataset.email
         );
