@@ -88,7 +88,6 @@ export default class HTMLService {
     noSubInfo.hidden = true;
   }
 
-  // TODO: refactor needed
   setDeleteBehavior() {
     const deleteIcons = document.querySelectorAll(".delete-sub");
     deleteIcons.forEach((deleteIcon) => {
