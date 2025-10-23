@@ -34,12 +34,11 @@ export default class HTMLService {
 
   mapToRow(subscriber) {
     if (!subscriber) return;
-
     // TODO: implement a dialog to confirm the deletion
-    // FIX: Date format
+
     const row = `
       <tr>
-        <td>${subscriber.createdDate.toLocaleString("pt-BR")}</td>
+        <td>${new Date(subscriber.createdDate).toLocaleString("pt-BR")}</td>
         <td>${subscriber.email}</td>
         <td
           class="delete-sub"
@@ -75,7 +74,6 @@ export default class HTMLService {
   setDeleteBehavior() {
     const bins = document.querySelectorAll(".delete-sub");
     bins.forEach((bin) => {
-
       bin.onclick = async () => {
         const isDeleted = await this.subscriberService.delete(
           bin.dataset.email
@@ -84,6 +82,5 @@ export default class HTMLService {
         this.toggleTable();
       };
     });
-
   }
 }
