@@ -58,8 +58,12 @@ export default class HTMLService {
     tbody.insertAdjacentHTML("beforeend", rows);
     const bins = document.querySelectorAll(".delete-sub");
     bins.forEach((bin) => {
-      bin.onclick = () => {
-        console.log(`👁️ [HTMLService.js] `, bin.dataset.email);
+      //TODO: verify if it is last item from the list to hide table
+      bin.onclick = async () => {
+        const isDeleted = await this.subscriberService.delete(
+          bin.dataset.email
+        );
+        if (isDeleted) bin.parentNode.remove();
       };
     });
     table.hidden = false;

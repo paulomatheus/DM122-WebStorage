@@ -29,6 +29,13 @@ export default class SubscriberService {
     return this.#db;
   }
 
+  async delete(email) {
+    console.log(`👁️ [SubscriberService.js] delete ${email}`);
+    this.#db = this.#db.filter((sub) => sub.email != email);
+    this.serialize();
+    return true;
+  }
+  
   serialize() {
     const subsString = JSON.stringify(this.#db);
     window.localStorage.setItem(DB_KEY, subsString);
