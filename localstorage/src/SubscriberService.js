@@ -1,7 +1,7 @@
 const DB_KEY = "INATEL::SUBSCRIBER:DB";
 
 export default class SubscriberService {
-  db = [];
+  #db = [];
 
   constructor() {
     this.deserialize();
@@ -18,15 +18,19 @@ export default class SubscriberService {
       email,
     };
     // TODO: implemente duplicated item validation
-    this.db.push(newRecord);
+    this.#db.push(newRecord);
     console.log(`👁️ [SubscriberService.js] ${email} added`);
-    console.table(this.db);
+    console.table(this.#db);
     this.serialize();
     return newRecord;
   }
 
+  async getAll() {
+    return this.#db;
+  }
+
   serialize() {
-    const subsString = JSON.stringify(this.db);
+    const subsString = JSON.stringify(this.#db);
     window.localStorage.setItem(DB_KEY, subsString);
     console.log(`👁️ [SubscriberService.js] finished serialization`);
   }
@@ -34,8 +38,8 @@ export default class SubscriberService {
   deserialize() {
     const subsString = window.localStorage.getItem(DB_KEY) || "[]";
     const subsJson = JSON.parse(subsString);
-    this.db = subsJson;
+    this.#db = subsJson;
     console.log(`👁️ [SubscriberService.js] load subs data`);
-    console.table(this.db);
+    console.table(this.#db);
   }
 }

@@ -1,7 +1,16 @@
+
 export default class HTMLService {
   constructor(subscriberService) {
-    this.setFormListener();
+
     this.subscriberService = subscriberService;
+    this.setFormListener();
+    this.fetchSubscribers();
+  }
+
+  async fetchSubscribers() {
+    const subs = await this.subscriberService.getAll();
+    if (!subs.length) return;
+    this.addSubsToTable(subs);
   }
 
   setFormListener() {
@@ -17,22 +26,18 @@ export default class HTMLService {
     if (!email) return;
     console.log(`👁️ [HtmlService.js] saving email ${email}`);
     const newSubscriber = await this.subscriberService.saveEmail(email);
-    this.addToTable(newSubscriber);
+    this.addSubsToTable([newSubscriber]);
   }
 
-  addToTable(subscriber) {
-    const table = document.querySelector("table");
-    if (!table || !subscriber) return;
-    const tbody = table.tBodies[0];
-    // const row = tbody.insertRow();
-    // const dateCell = row.insertCell();
-    // const emailCell = row.insertCell();
-    // const deleteCell = row.insertCell();
-    // dateCell.textContent = subscriber.createdDate.toLocaleString("pt-BR");
-    // emailCell.textContent = subscriber.email;
-    // deleteCell.textContent = "🗑️";
+  addSubsToTable(subs) {
+    const rows = subs.map(this.mapToRow).join("");
+    this.addToTable(rows);
+  }
 
+  mapToRow(subscriber) {
+    if (!subscriber) return;
     // TODO: implemente the delete action
+    // FIX: Date format
     const row = `
       <tr>
         <td>${subscriber.createdDate.toLocaleString("pt-BR")}</td>
@@ -40,7 +45,14 @@ export default class HTMLService {
         <td>🗑️</td>
       </tr>
     `;
-    tbody.insertAdjacentHTML("beforeend", row);
+    return row;
+  }
+
+  addToTable(rows) {
+    const table = document.querySelector("table");
+    if (!table) return;
+    const tbody = table.tBodies[0];
+    tbody.insertAdjacentHTML("beforeend", rows);
     table.hidden = false;
   }
 }
