@@ -13,7 +13,7 @@ export default class HTMLService {
   initializeTableReferences() {
     const table = document.querySelector("table");
     if (!table) {
-      console.log(`👁️ [HTMLService.js] the table element is required.`);
+      console.log(`[HTMLService.js] the table element is required.`);
       return;
     }
     this.#table = table;
@@ -39,7 +39,7 @@ export default class HTMLService {
 
   async save(email) {
     if (!email) return;
-    console.log(`👁️ [HtmlService.js] saving email ${email}`);
+    console.log(`[HtmlService.js] saving email ${email}`);
     const newSubscriber = await this.subscriberService.save(email);
     this.addSubsToTable([newSubscriber]);
   }

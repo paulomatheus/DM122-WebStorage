@@ -5,7 +5,7 @@ export default class SubscriberService {
 
   constructor() {
     this.deserialize();
-    console.log(`👁️ [SubscriberService.js] initialized`);
+    console.log(`[SubscriberService.js] initialized`);
   }
 
   async save(email) {
@@ -15,7 +15,7 @@ export default class SubscriberService {
     }
     const isDuplicated = this.#db.some((sub) => sub.email === email);
     if (isDuplicated) {
-      console.error(`👁️ [SubscriberService.js] duplicated email: ${email}`);
+      console.error(`[SubscriberService.js] duplicated email: ${email}`);
       return;
     }
     const newRecord = {
@@ -24,8 +24,8 @@ export default class SubscriberService {
     };
     // TODO: implemente duplicated item validation
     this.#db.push(newRecord);
-    console.log(`👁️ [SubscriberService.js] ${email} added`);
-    console.table(this.#db);
+    console.log(`[SubscriberService.js] ${email} added`);
+    // console.table(this.#db);
     this.serialize();
     return newRecord;
   }
@@ -35,7 +35,7 @@ export default class SubscriberService {
   }
 
   async delete(email) {
-    console.log(`👁️ [SubscriberService.js] delete ${email}`);
+    console.log(`[SubscriberService.js] delete ${email}`);
     this.#db = this.#db.filter((sub) => sub.email != email);
     this.serialize();
     return true;
@@ -44,14 +44,14 @@ export default class SubscriberService {
   serialize() {
     const subsString = JSON.stringify(this.#db);
     window.localStorage.setItem(DB_KEY, subsString);
-    console.log(`👁️ [SubscriberService.js] finished serialization`);
+    console.log(`[SubscriberService.js] finished serialization`);
   }
 
   deserialize() {
     const subsString = window.localStorage.getItem(DB_KEY) || "[]";
     const subsJson = JSON.parse(subsString);
     this.#db = subsJson;
-    console.log(`👁️ [SubscriberService.js] load subs data`);
-    console.table(this.#db);
+    console.log(`[SubscriberService.js] loaded subs records`);
+    // console.table(this.#db);
   }
 }

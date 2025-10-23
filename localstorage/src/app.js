@@ -5,7 +5,7 @@ class App {
   constructor() {
     const subscriberService = new SubscriberService();
     new HTMLService(subscriberService);
-    console.log(`👁️ [app.js] initialized`);
+    console.log(`[app.js] initialized`);
   }
 }
 
