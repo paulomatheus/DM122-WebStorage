@@ -1,3 +1,5 @@
+import Dexie from "https://cdn.jsdelivr.net/npm/dexie@4.2.1/+esm";
+
 const DB_KEY = "INATEL::SUBSCRIBER:DB";
 
 export default class SubscriberService {
@@ -5,6 +7,25 @@ export default class SubscriberService {
 
   constructor() {
     console.log(`[SubscriberService.js] initialized`);
+    this.#initializeDB();
+  }
+
+  #initializeDB() {
+    console.log(`[SubscriberService.js] initializeDB`);
+    const db = new Dexie(DB_KEY);
+    db.version(1).stores({
+      subs: "email",
+    });
+    db.on("populate", async () => {
+      await db.subs.bulkPut([
+        { email: "paulo@inatel.br", createdDate: new Date() },
+        { email: "lidy@inatel.br", createdDate: new Date() },
+        { email: "davi@inatel.br", createdDate: new Date() },
+        { email: "pedro@inatel.br", createdDate: new Date() },
+      ]);
+    });
+    db.open();
+    this.#db = db;
   }
 
   async save(email) {
@@ -12,28 +33,27 @@ export default class SubscriberService {
       console.error(`[SubscriberService.js] no email provided`);
       return;
     }
-    const isDuplicated = this.#db.some((sub) => sub.email === email);
-    if (isDuplicated) {
-      console.error(`[SubscriberService.js] duplicated email: ${email}`);
-      return;
-    }
+
     const newRecord = {
       createdDate: new Date(),
       email,
     };
-    this.#db.push(newRecord);
-    console.log(`[SubscriberService.js] ${email} added`);
-    // console.table(this.#db);
-    return { ...newRecord };
+    try {
+      await this.#db.subs.add(newRecord);
+      console.log(`[SubscriberService.js] ${email} added`);
+      return { ...newRecord };
+    } catch (error) {
+      console.error(`[SubscriberService.js] duplicated email: ${email}`);
+    }
   }
 
   async getAll() {
-    return window.structuredClone(this.#db);
+    return this.#db.subs.toArray();
   }
 
   async delete(email) {
     console.log(`[SubscriberService.js] delete ${email}`);
-    this.#db = this.#db.filter((sub) => sub.email !== email);
+    await this.#db.subs.delete(email);
     return true;
   }
 }
