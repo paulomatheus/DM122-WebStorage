@@ -5,8 +5,9 @@ button.addEventListener("click", () => {
     //fetchFromNetwork("https://api.github.com/users/paulomatheus");
     // fetchFromNetwork("https://nonexist/api/v2/pokemon/150");
     //fetchFromNetwork("https://httpbin.org/status/500");
-    fetchFromNetwork("https://pokeapi.co/api/v2/pokemon/150").then((data) =>
-        showData(data)
+    const randomId = Math.floor(Math.random() * 151) + 1;
+    fetchFromNetwork(`https://pokeapi.co/api/v2/pokemon/${randomId}`).then(
+        (data) => showData(data)
     );
 });
 
@@ -15,24 +16,31 @@ async function fetchFromNetwork(url) {
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            console.error(
-                `Error on requesting ${url} with status code ${response.status}`
-            );
+            addToCache(url, response.clone());
+            // console.log(
+            //   `👁️ [app.js] response content-type`,
+            //   response.headers.get("content-type")
+            // );
             return response.json();
-        }   
+        }
     } catch (error) {
         console.error(`👁️ [app.js] network failed`);
-        }
-        console.log(
-            `👁️ [app.js] response content-type`,
-            response.headers.get("content-type")
-        );
-        return;
     }
- 
+}
+async function fetchFromCache(url) {
+    const response = await caches.match(url);
+    return response && response.json();
+}
+
+async function addToCache(key, response) {
+    const cache = await caches.open("MY-CACHE-KEY");
+    cache.put(key, response);
+}
+
+
 function showData(data) {
-        console.log(`👁️ [app.js] show data`, data);
-        const img = document.createElement("img");
-        img.src = data.sprites.front_default;
-        document.body.appendChild(img);
-    }
+    console.log(`👁️ [app.js] show data`, data);
+    const img = document.createElement("img");
+    img.src = data.sprites.front_default;
+    document.body.appendChild(img);
+}
