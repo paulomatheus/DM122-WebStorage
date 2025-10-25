@@ -5,7 +5,9 @@ button.addEventListener("click", async () => {
   // const randomId = Math.floor(Math.random() * 151) + 1;
   // const url = `https://pokeapi.co/api/v2/pokemon/${randomId}`;
   const url = `https://api.github.com/users/edysegura`;
+  button.setAttribute("aria-busy", true);
   const data = await fetchData(url);
+  button.removeAttribute("aria-busy");
   showData(data);
 });
 
@@ -43,13 +45,28 @@ async function fetchFromCache(url) {
     console.log(`👁️ [app.js] no cache data for ${url}`);
     return;
   }
+   console.log(`👁️ [app.js] data successfully returned from cache`);
   return response.json();
 }
 
 async function addToCache(key, response) {
+  console.log(`👁️ [app.js] setting cache TTL for ${key}`);
   const cache = await caches.open("MY-CACHE-KEY");
   cache.put(key, response);
+  setCacheTTL({
+    cache,
+    key,
+    seconds: 30,
+  });
   console.log(`👁️ [app.js] request ${key} was successfully added to cache`);
+}
+
+async function setCacheTTL({ cache, key, seconds }) {
+  const timer = 1000 * seconds; // 30 seconds
+  setTimeout(() => {
+    console.log(`👁️ [app.js] deleting cache for ${key}`);
+    cache.delete(key);
+  }, timer);
 }
 
 function showData(data) {
