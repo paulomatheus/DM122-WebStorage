@@ -22,7 +22,7 @@ export default class SubscriberService {
       createdDate: new Date(),
       email,
     };
-    // TODO: implemente duplicated item validation
+    
     this.#db.push(newRecord);
     console.log(`[SubscriberService.js] ${email} added`);
     // console.table(this.#db);
