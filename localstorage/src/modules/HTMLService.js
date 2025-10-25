@@ -98,12 +98,14 @@ export default class HTMLService {
 
   async confirmDeletion(deleteIcon) {
     // TODO: implement a dialog to confirm the deletion
-    const isDeleted = await this.subscriberService.delete(
-      deleteIcon.dataset.email
-    );
-    if (isDeleted) {
-      deleteIcon.closest("tr")?.remove();
-      this.toggleTable();
+     if (window.confirm(`Delete email ${deleteIcon.dataset.email}?`)) {
+      const isDeleted = await this.subscriberService.delete(
+        deleteIcon.dataset.email
+      );
+      if (isDeleted) {
+        deleteIcon.closest("tr")?.remove();
+        this.toggleTable();
+      }
     }
   }
 }
