@@ -29,7 +29,7 @@ export default class HTMLService {
 
   setFormListener() {
     const form = document.querySelector("form");
-     form.addEventListener("submit", async (event) => {
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
       console.log("[HtmlService.js] form trigged!");
       await this.save(form.email.value);
@@ -92,20 +92,32 @@ export default class HTMLService {
   setDeleteBehavior() {
     const deleteIcons = document.querySelectorAll(".delete-sub");
     deleteIcons.forEach((deleteIcon) => {
-      deleteIcon.onclick = () => this.confirmDeletion(deleteIcon);
+      deleteIcon.onclick = () => this.showConfirmDialog(deleteIcon);
     });
   }
 
-  async confirmDeletion(deleteIcon) {
-    // TODO: implement a dialog to confirm the deletion
-     if (window.confirm(`Delete email ${deleteIcon.dataset.email}?`)) {
-      const isDeleted = await this.subscriberService.delete(
-        deleteIcon.dataset.email
+  async showConfirmDialog(deleteIcon) {
+    const dialog = document.getElementById("confirm-dialog");
+    const span = dialog.querySelector("span");
+    const email = deleteIcon.dataset.email;
+    span.textContent = email;
+    dialog.showModal();
+    dialog.addEventListener("close", (event) => {
+      const performedAction = event.target.returnValue;
+      console.log(
+        `[HTMLService.js] confirm dialog performed action:`,
+        performedAction
       );
-      if (isDeleted) {
-        deleteIcon.closest("tr")?.remove();
-        this.toggleTable();
-      }
+      if (performedAction === "confirmed") this.delete(deleteIcon);
+    });
+  }
+
+  async delete(deleteIcon) {
+    const email = deleteIcon.dataset.email;
+    const isDeleted = await this.subscriberService.delete(email);
+    if (isDeleted) {
+      deleteIcon.closest("tr")?.remove();
+      this.toggleTable();
     }
   }
 }
